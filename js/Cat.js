@@ -1,7 +1,7 @@
 // базовая скорость (пикс/кадр или пикс/тик — зависит от твоего FPS/ожиданий)
 // здесь используем как пикс/сек для твина
 const CATSPEED = 100;
-const SHOW_CAT_COLLIDERS = true;
+const SHOW_CAT_COLLIDERS = false;
 
 class Cat extends Phaser.GameObjects.Container {
     /**
@@ -818,3 +818,4 @@ class CatSequence {
         }
     }
 }
+
