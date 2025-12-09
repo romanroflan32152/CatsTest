@@ -93,7 +93,7 @@ class CatSelectOverlay extends Phaser.GameObjects.Container {
         this.add(header);
 
         const title = this.scene.add.text(cx, headerY, 'Choose your cat', {
-            fontFamily: 'Arial',
+            fontFamily: 'DynaPuff',
             fontSize: '24px',
             color: '#94A857'
         }).setOrigin(0.5);
@@ -177,7 +177,7 @@ class CatSelectOverlay extends Phaser.GameObjects.Container {
                 bubbleCenterY,
                 bubbleTexts[cfg.color] || '',
                 {
-                    fontFamily: 'Arial',
+                    fontFamily: 'DynaPuff',
                     fontSize: '16px',
                     color: '#94A857',
                     align: 'center',
@@ -217,7 +217,7 @@ class CatSelectOverlay extends Phaser.GameObjects.Container {
 
         const submitPanel = this._createPanel(cx, submitY, submitW, submitH);
         const submitText  = this.scene.add.text(cx, submitY, 'Submit', {
-            fontFamily: 'Arial',
+            fontFamily: 'DynaPuff',
             fontSize: '22px',
             color: '#94A857'
         }).setOrigin(0.5);

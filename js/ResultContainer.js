@@ -40,7 +40,7 @@ class ResultContainer {
         else                            titleStr = 'Success!';
 
         const title = scene.add.text(w / 2, h / 2 - panelH / 2 + 40, titleStr, {
-            fontFamily: 'Arial',
+            fontFamily: 'DynaPuff',
             fontSize: '28px',
             color: '#94A857'
         }).setOrigin(0.5).setDepth(102);
@@ -67,7 +67,7 @@ class ResultContainer {
             y += 60;
 
             const info = scene.add.text(w / 2, y, 'found shelter for this night', {
-                fontFamily: 'Arial',
+                fontFamily: 'DynaPuff',
                 fontSize: '18px',
                 color: '#94A857'
             }).setOrigin(0.5).setDepth(102);
@@ -89,7 +89,7 @@ class ResultContainer {
             y += 60;
 
             const info = scene.add.text(w / 2, y, 'is only one left...', {
-                fontFamily: 'Arial',
+                fontFamily: 'DynaPuff',
                 fontSize: '20px',
                 color: '#94A857'
             }).setOrigin(0.5).setDepth(102);
@@ -100,7 +100,7 @@ class ResultContainer {
         } else if (mode === 'gameOver') {
             game.sound.play('end');
             const info = scene.add.text(w / 2, y, 'No one found shelter...', {
-                fontFamily: 'Arial',
+                fontFamily: 'DynaPuff',
                 fontSize: '18px',
                 color: '#94A857'
             }).setOrigin(0.5).setDepth(102);
@@ -136,7 +136,7 @@ class ResultContainer {
 
     _createButton(x, y, text, onClick) {
         const scene = this.scene;
-        const btnW = 200;
+        const btnW = 250;
         const btnH = 50;
 
         const gfx = scene.add.graphics().setDepth(102);
@@ -149,7 +149,7 @@ class ResultContainer {
         );
 
         const txt = scene.add.text(x, y, text, {
-            fontFamily: 'Arial',
+            fontFamily: 'DynaPuff',
             fontSize: '20px',
             color: '#94A857'
         }).setOrigin(0.5).setDepth(103);

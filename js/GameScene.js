@@ -64,9 +64,9 @@ class GameScene extends Phaser.Scene {
         const text = this.add.text(
             w / 2,
             h / 2,
-            'Night is coming,\nwe need to find shelter',
+            'Night is coming,\nwe need to find a shelter',
             {
-                fontFamily: 'Arial',
+                fontFamily: 'DynaPuff',
                 fontSize: '26px',
                 color: '#FFFFFF',
                 align: 'center'
@@ -211,7 +211,7 @@ class GameScene extends Phaser.Scene {
             .setInteractive();
 
         const text = this.add.text(w / 2, h / 2, `Day ${day}`, {
-            fontFamily: 'Arial',
+            fontFamily: 'DynaPuff',
             fontSize: '40px',
             color: '#FFFFFF'
         }).setOrigin(0.5).setDepth(101);
@@ -383,7 +383,7 @@ class GameScene extends Phaser.Scene {
                 40,
                 '',
                 {
-                    fontFamily: 'Arial',
+                    fontFamily: 'DynaPuff',
                     fontSize: '22px',
                     color: '#FFFFFF'
                 }

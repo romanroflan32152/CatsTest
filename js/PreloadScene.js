@@ -87,7 +87,7 @@ class PreloadScene extends Phaser.Scene {
 
     createLoaderUI() {
         this.loadingText = this.add.text(GAME_WIDTH / 2, 700, 'Loading: 0%', {
-            fontFamily: 'Arial',
+            fontFamily: 'DynaPuff',
             fontSize: '25px',
             color: '#f0f0f0'
         }).setOrigin(0.5);

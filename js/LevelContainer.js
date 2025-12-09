@@ -277,7 +277,7 @@ class LevelContainer {
 
             // масштаб по z как у кота (но depth не трогаем)
             if (typeof pos.z === 'number') {
-                const scale = 0.8 + pos.z * 0.1;
+                const scale = 1 + pos.z * 0.1;
                 sprite.setScale(scale * LEVEL_SCALE_FACTOR);
             }
 
@@ -294,7 +294,7 @@ class LevelContainer {
                 .setDepth(10);
 
             if (typeof pos.z === 'number') {
-                const scale = 0.2 + pos.z * 0.08;
+                const scale = 0.4 + pos.z * 0.08;
                 hint.setScale(scale * LEVEL_SCALE_FACTOR);
             }
 

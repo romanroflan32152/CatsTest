@@ -26,7 +26,7 @@ class UILevelContainer {
             .setDepth(11);
 
         this.topLabel = scene.add.text(w / 2, 70, '', {
-            fontFamily: 'Arial',
+            fontFamily: 'DynaPuff',
             fontSize: '22px',
             color: '#94A857',
             align: 'center'
@@ -46,7 +46,7 @@ class UILevelContainer {
         );
 
         this.submitText = scene.add.text(w / 2, btnY, 'Submit', {
-            fontFamily: 'Arial',
+            fontFamily: 'DynaPuff',
             fontSize: '22px',
             color: '#94A857'
         }).setOrigin(0.5).setDepth(11);

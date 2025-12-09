@@ -20,7 +20,7 @@ class Cat extends Phaser.GameObjects.Container {
 
         // факторы действий
         this.runFactor   = 1;
-        this.jumpFactor  = 2;
+        this.jumpFactor  = 2.3;
         this.climbFactor = 1;
         this.scareFactor = 1;
 
