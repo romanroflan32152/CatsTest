@@ -11,7 +11,7 @@ class UILevelContainer {
         const panelW = Math.min(420, w * 0.85);
         const panelH = 80;
 
-        this.topPanel = scene.add.graphics().setDepth(5);
+        this.topPanel = scene.add.graphics().setDepth(10);
         this.topPanel.fillStyle(0xD0D6B2, 1);
         this.topPanel.fillRoundedRect(-panelW / 2, -panelH / 2, panelW, panelH, 16);
         this.topPanel.setPosition(w / 2, 70);
@@ -23,20 +23,20 @@ class UILevelContainer {
         )
             .setOrigin(0.5)
             .setScale(0.7)
-            .setDepth(6);
+            .setDepth(11);
 
         this.topLabel = scene.add.text(w / 2, 70, '', {
             fontFamily: 'Arial',
             fontSize: '22px',
             color: '#94A857',
             align: 'center'
-        }).setOrigin(0.5).setDepth(6);
+        }).setOrigin(0.5).setDepth(11);
 
         const btnW = 220;
         const btnH = 60;
         const btnY = h - 80;
 
-        this.submitPanel = scene.add.graphics().setDepth(5);
+        this.submitPanel = scene.add.graphics().setDepth(10);
         this.submitPanel.fillStyle(0xD0D6B2, 1);
         this.submitPanel.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 16);
         this.submitPanel.setPosition(w / 2, btnY);
@@ -49,7 +49,7 @@ class UILevelContainer {
             fontFamily: 'Arial',
             fontSize: '22px',
             color: '#94A857'
-        }).setOrigin(0.5).setDepth(6);
+        }).setOrigin(0.5).setDepth(11);
         this.submitText.setInteractive();
 
         this._submitHandler = null;

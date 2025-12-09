@@ -1,4 +1,4 @@
-const ROUND_TIME_SECONDS = 10;
+let ROUND_TIME_SECONDS = 10;
 let SUCCESS_SOUNDS = [1, 2, 3];
 
 class GameScene extends Phaser.Scene {
@@ -121,10 +121,16 @@ class GameScene extends Phaser.Scene {
         this.levelIndex = (this.day - 1) % MAP_CONFIGS.length;
         if (this.levelIndex === 0) {
             LEVEL_SCALE_FACTOR = 1;
+            LEVEL_SPEED_FACTOR = 1;
+            ROUND_TIME_SECONDS = 10;
         } else if (this.levelIndex === 1) {
-            LEVEL_SCALE_FACTOR = 0.75;
-        } else if (this.levelIndex === 1) {
-            LEVEL_SCALE_FACTOR = 1;
+            LEVEL_SCALE_FACTOR = 0.5;
+            LEVEL_SPEED_FACTOR = 0.75;
+            ROUND_TIME_SECONDS = 9;
+        } else if (this.levelIndex === 2) {
+            LEVEL_SCALE_FACTOR = 0.4;
+            LEVEL_SPEED_FACTOR = 0.45;
+            ROUND_TIME_SECONDS = 8;
         }
 
         this.levelContainer.setupLevel(this.levelIndex);
@@ -727,6 +733,8 @@ class GameScene extends Phaser.Scene {
                     // запрет на драку, если кулдаун у любого
                     if (a.scene.time.now < a._fightCooldownUntil) continue;
                     if (b.scene.time.now < b._fightCooldownUntil) continue;
+
+                    if (Math.abs(a.z - b.z) > 0.9) continue;
 
                     a.fightFor(fightDuration, b.color);
                     b.fightFor(fightDuration, a.color);

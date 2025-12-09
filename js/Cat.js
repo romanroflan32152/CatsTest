@@ -3,6 +3,7 @@
 const CATSPEED = 115;
 const SHOW_CAT_COLLIDERS = false;
 let LEVEL_SCALE_FACTOR = 1;
+let LEVEL_SPEED_FACTOR = 1;
 
 class Cat extends Phaser.GameObjects.Container {
     /**
@@ -19,7 +20,7 @@ class Cat extends Phaser.GameObjects.Container {
 
         // факторы действий
         this.runFactor   = 1;
-        this.jumpFactor  = 1.75;
+        this.jumpFactor  = 2;
         this.climbFactor = 1;
         this.scareFactor = 1;
 
@@ -29,7 +30,7 @@ class Cat extends Phaser.GameObjects.Container {
         if (color === 'orange') {
             this.scareFactor = 0.5;
             this.climbFactor = 0.25;
-            this.jumpFactor  = 2.5;
+            this.jumpFactor  = 3;
         }
 
         this.state = null;
@@ -147,7 +148,7 @@ class Cat extends Phaser.GameObjects.Container {
             ? Phaser.Math.Clamp(z, 1, 10)
             : this.z;
 
-        const speed    = CATSPEED * LEVEL_SCALE_FACTOR * this.runFactor;   // px/sec
+        const speed    = CATSPEED * LEVEL_SPEED_FACTOR * this.runFactor;   // px/sec
         const distance = Phaser.Math.Distance.Between(this.x, this.y, x, y);
         const duration = (distance / Math.max(speed, 0.0001)) * 1000; // ms
 
@@ -215,7 +216,7 @@ class Cat extends Phaser.GameObjects.Container {
                     ? Phaser.Math.Clamp(z, 1, 10)
                     : this.z;
 
-                const speed    = CATSPEED * LEVEL_SCALE_FACTOR  * this.jumpFactor;
+                const speed    = CATSPEED * LEVEL_SPEED_FACTOR  * this.jumpFactor;
                 const distance = Phaser.Math.Distance.Between(this.x, this.y, x, y);
                 const duration = (distance / Math.max(speed, 0.0001)) * 1000;
 
@@ -269,11 +270,17 @@ class Cat extends Phaser.GameObjects.Container {
 
                 this.setState('climb');
 
+                if (y > this.y) {
+                    game.sound.play('jumpdown');
+                } else {
+                    game.sound.play('jump');
+                }
+
                 const targetZ = (typeof z === 'number')
                     ? Phaser.Math.Clamp(z, 1, 10)
                     : this.z;
 
-                const speed    = CATSPEED * LEVEL_SCALE_FACTOR  * this.jumpFactor;
+                const speed    = CATSPEED * LEVEL_SPEED_FACTOR  * this.jumpFactor * 2;
                 const distance = Phaser.Math.Distance.Between(this.x, this.y, x, y);
                 const duration = (distance / Math.max(speed, 0.0001)) * 1000;
 
@@ -638,7 +645,7 @@ class Cat extends Phaser.GameObjects.Container {
             case 'jump': {
                 this.sprite.setOrigin(0.5, 1);
                 this._setTextureSafe(`cat_jump_${c}`);
-                this.sprite.setScale(0.5);
+                this.sprite.setScale(0.6);
 
                 // const offsetX = (this.sprite.displayWidth || this.sprite.width) * 0.25;
                 const offsetX = 0;

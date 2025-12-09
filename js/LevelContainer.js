@@ -151,16 +151,77 @@ const MAP_CONFIGS = [
     {
         key: 'map3',
         shelters: [
-            { x: 36,  y: 515, z: 10 },
-            { x: 305, y: 540, z: 7 },
-            { x: 150, y: 790, z: 2 }
+            { x: 432,  y: 835, z: 6, finalPose: { x: 430, y: 835 , z: 6, scale: 0.3} },
+            { x: 113, y: 820, z: 7, finalPose: { x: 113, y: 820 , z: 7, scale: 0.3} },
+            { x: 287, y: 703, z: 4, finalPose: { x: 287, y: 703 , z: 4, scale: 0.2} }
         ],
         spawns: [
-            { x: 175, y: 295, z: 10 },
-            { x: 460, y: 700, z: 6 },
-            { x: 70,  y: 970, z: 1 }
+            { x: 368, y: 826, z: 6 },
+            { x: 77, y: 835, z: 7 },
+            { x: 285,  y: 635, z: 3 }
         ],
-        paths: [] // пока без явных путей
+        paths: [
+            // spawn 0 (spawn1)
+            [
+                [
+                    { action: 'jump', shelterIndex: 0 }
+                ],
+                [
+                    { action: 'run', x: 320, y: 845, z: 6 },
+                    { action: 'run', x: 240, y: 847, z: 6 },
+                    { action: 'run', x: 167, y: 833, z: 6 },
+                    { action: 'jump', shelterIndex: 1 }
+                ],
+                [
+                    { action: 'jump', x: 340, y: 841, z: 7 },
+                    { action: 'run', x: 248, y: 836, z: 7 },
+                    { action: 'climb', x: 248, y: 693, z: 6 },
+                    { action: 'run',  shelterIndex: 2 }
+                ]
+            ],
+            // spawn 1 (spawn2)
+            [
+                [
+                    { action: 'run', x: 392, y: 840, z: 7 },
+                    { action: 'jump', shelterIndex: 0 }
+                ],
+                [
+                    { action: 'jump', shelterIndex: 1 }
+                ],
+                [
+                    { action: 'run', x: 248, y: 834, z: 7 },
+                    { action: 'climb', x: 248, y: 693, z: 6 },
+                    { action: 'run',  shelterIndex: 2 }
+                ]
+            ],
+            // spawn 2 (spawn3)
+            [
+                [
+                    { action: 'jump', x: 274, y: 693, z: 6 },
+                    { action: 'jump', x: 244, y: 838, z: 7 },
+                    { action: 'run', x: 409, y: 842, z: 7 },
+                    { action: 'jump', shelterIndex: 0 }
+                ],
+                [
+
+                    { action: 'jump', x: 274, y: 693, z: 6 },
+                    { action: 'jump', x: 244, y: 836, z: 7 },
+                    { action: 'run', x: 132, y: 835, z: 7 },
+                    { action: 'jump', shelterIndex: 1 }
+                ],
+                [
+                    { action: 'jump',  shelterIndex: 2 }
+                ]
+            ]
+        ],
+        objects: [
+            { sprite: 'map3_decor6', scale: 0.59, x: 248, y: 562 + 62, z: 2 },
+            { sprite: 'map3_decor5', scale: 0.59, x: 271, y: 661 + 30, z: 6 },
+            { sprite: 'map3_decor4', scale: 0.5, x: 423, y: 823 + 9, z: 5 },
+            { sprite: 'map3_decor3', scale: 0.58, x: 267, y: 860, z: 7 },
+            { sprite: 'map3_decor2', scale: 0.59, x: 233, y: 899, z: 6 },
+            { sprite: 'map3_decor1', scale: 0.59, x: 242, y: 853, z: 2 },
+        ]
     }
 ];
 
