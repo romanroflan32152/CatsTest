@@ -119,6 +119,14 @@ class GameScene extends Phaser.Scene {
         this.spawnAssignedIndexByColor = {};
 
         this.levelIndex = (this.day - 1) % MAP_CONFIGS.length;
+        if (this.levelIndex === 0) {
+            LEVEL_SCALE_FACTOR = 1;
+        } else if (this.levelIndex === 1) {
+            LEVEL_SCALE_FACTOR = 0.75;
+        } else if (this.levelIndex === 1) {
+            LEVEL_SCALE_FACTOR = 1;
+        }
+
         this.levelContainer.setupLevel(this.levelIndex);
 
         // ✦ заранее раскидываем котов по спавнам на этот день
@@ -430,6 +438,7 @@ class GameScene extends Phaser.Scene {
 
             // idle 1 секунду
             cat.toIdle();
+            cat._updateZVisual();
 
             const shelterIndex = this.currentAssignments[color];
             if (shelterIndex === undefined) {
@@ -443,9 +452,28 @@ class GameScene extends Phaser.Scene {
                     const first = (this.shelterOccupants[shelterIndex] == null);
 
                     if (first) {
+                        // ✦ ставим кота в финальную позу, если она задана в конфиге
+                        const cfg = MAP_CONFIGS[this.levelIndex];
+                        const shelterCfg = cfg && cfg.shelters && cfg.shelters[shelterIndex];
+                        const finalPose = shelterCfg && shelterCfg.finalPose;
+
+                        if (finalPose) {
+                            cat.x = finalPose.x;
+                            cat.y = finalPose.y;
+
+                            if (typeof finalPose.z === 'number' && cat.setZ) {
+                                cat.setZ(finalPose.z);
+                            }
+                            if (typeof finalPose.scale === 'number') {
+                                cat.setScale(finalPose.scale);
+                            }
+                            if (cat.toIdle) {
+                                cat.toIdle(); // "улёгся" в домике
+                            }
+                        }
+
                         let soundNum = Phaser.Utils.Array.GetRandom(SUCCESS_SOUNDS);
 
-                        // ✦ фикс рандомизации SUCCESS_SOUNDS без багов
                         const idx = SUCCESS_SOUNDS.indexOf(soundNum);
                         if (idx !== -1) {
                             SUCCESS_SOUNDS.splice(idx, 1);
@@ -684,6 +712,7 @@ class GameScene extends Phaser.Scene {
                 // драка запускается, если оба НЕ idle (и не уже в драке)
                 if (a.state === 'idle' || b.state === 'idle') continue;
                 if (a.state === 'fight' || b.state === 'fight') continue;
+                if (a.state === 'scared' || b.state === 'scared') continue;
 
                 const centerA = a.getCollisionCenter ? a.getCollisionCenter() : { x: a.x, y: a.y };
                 const centerB = b.getCollisionCenter ? b.getCollisionCenter() : { x: b.x, y: b.y };
@@ -695,10 +724,108 @@ class GameScene extends Phaser.Scene {
                 const r = a.getCollisionRadius() + b.getCollisionRadius();
 
                 if (distSq <= r * r) {
+                    // запрет на драку, если кулдаун у любого
+                    if (a.scene.time.now < a._fightCooldownUntil) continue;
+                    if (b.scene.time.now < b._fightCooldownUntil) continue;
+
                     a.fightFor(fightDuration, b.color);
                     b.fightFor(fightDuration, a.color);
                 }
             }
+        }
+    }
+
+    _updateObjectCollisions() {
+        const runtimeEntries = Object.values(this.catsRuntime || {});
+        const cats = runtimeEntries
+            .map(d => d && d.cat)
+            .filter(cat => cat && cat.active);
+
+        const objects = (this.levelContainer && this.levelContainer.objects) || [];
+        if (!cats.length || !objects.length) return;
+
+        // --- сначала обновляем / рисуем дебажные круги под объекты ---
+        objects.forEach(obj => {
+            if (!obj || !obj.sprite) return;
+
+            const sprite = obj.sprite;
+
+            // радиус такой же, как в коллизии
+            const rObj = Math.max(sprite.displayWidth, sprite.displayHeight) * 0.25;
+            obj.debugRadius = rObj;
+
+            // создаём Graphics один раз
+            if (!obj.debugCollider) {
+                obj.debugCollider = this.add.graphics()
+                    .setDepth(sprite.depth + 1);
+            }
+
+            const g = obj.debugCollider;
+            g.clear();
+
+            if (!obj.used && sprite.visible) {
+                g.lineStyle(1, 0x00ff00, 0.6); // зелёный полупрозрачный круг
+                g.strokeCircle(sprite.x, sprite.y, rObj);
+                g.setVisible(SHOW_CAT_COLLIDERS && true);
+            } else {
+                g.setVisible(false);
+            }
+        });
+
+        // --- затем считаем реальные коллизии котов с объектами ---
+        cats.forEach(cat => {
+            const centerCat = cat.getCollisionCenter ? cat.getCollisionCenter() : { x: cat.x, y: cat.y };
+            const rCat = cat.getCollisionRadius ? cat.getCollisionRadius() : 30;
+
+            objects.forEach(obj => {
+                if (!obj || !obj.sprite || obj.used) return;
+
+                const sprite = obj.sprite;
+                const centerObj = { x: sprite.x, y: sprite.y };
+                const rObj = obj.debugRadius || Math.max(sprite.displayWidth, sprite.displayHeight) * 0.25;
+
+                const dx = centerCat.x - centerObj.x;
+                const dy = centerCat.y - centerObj.y;
+                const distSq = dx * dx + dy * dy;
+                const sumR = rCat + rObj;
+
+                if (distSq <= sumR * sumR) {
+                    obj.used = true;
+                    this._applyObjectCollisionEffect(cat, obj);
+
+                    // сразу отключаем визуальный коллайдер
+                    if (obj.debugCollider) {
+                        obj.debugCollider.setVisible(false);
+                    }
+                }
+            });
+        });
+    }
+
+    _applyObjectCollisionEffect(cat, obj) {
+        const cfg = obj.config || {};
+        const onCollision = cfg.onCollision;
+        if (!onCollision) return;
+
+        const action = onCollision.action;
+        const params = onCollision.parameters || [];
+
+        switch (action) {
+            case 'scare': {
+                const duration = params[0] || 1000;
+                if (cat.scareFor) {
+                    cat.scareFor(duration);
+                }
+                break;
+            }
+            // сюда можно добавлять другие action'ы
+        }
+
+        if (obj.sprite) {
+            obj.sprite.setVisible(false);
+        }
+        if (obj.debugCollider) {
+            obj.debugCollider.setVisible(false); // ✦ прячем круг
         }
     }
 
@@ -707,5 +834,6 @@ class GameScene extends Phaser.Scene {
         if (!this.catsRuntime) return;
 
         this._updateCatFightCollisions();
+        this._updateObjectCollisions();
     }
 }

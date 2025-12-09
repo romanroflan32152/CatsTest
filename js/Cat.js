@@ -1,7 +1,8 @@
 // базовая скорость (пикс/кадр или пикс/тик — зависит от твоего FPS/ожиданий)
 // здесь используем как пикс/сек для твина
-const CATSPEED = 100;
+const CATSPEED = 115;
 const SHOW_CAT_COLLIDERS = false;
+let LEVEL_SCALE_FACTOR = 1;
 
 class Cat extends Phaser.GameObjects.Container {
     /**
@@ -19,7 +20,7 @@ class Cat extends Phaser.GameObjects.Container {
         // факторы действий
         this.runFactor   = 1;
         this.jumpFactor  = 1.75;
-        this.climbFactor = 0.5;
+        this.climbFactor = 1;
         this.scareFactor = 1;
 
         if (color === 'black') {
@@ -146,7 +147,7 @@ class Cat extends Phaser.GameObjects.Container {
             ? Phaser.Math.Clamp(z, 1, 10)
             : this.z;
 
-        const speed    = CATSPEED * this.runFactor;   // px/sec
+        const speed    = CATSPEED * LEVEL_SCALE_FACTOR * this.runFactor;   // px/sec
         const distance = Phaser.Math.Distance.Between(this.x, this.y, x, y);
         const duration = (distance / Math.max(speed, 0.0001)) * 1000; // ms
 
@@ -214,7 +215,7 @@ class Cat extends Phaser.GameObjects.Container {
                     ? Phaser.Math.Clamp(z, 1, 10)
                     : this.z;
 
-                const speed    = CATSPEED * this.jumpFactor;
+                const speed    = CATSPEED * LEVEL_SCALE_FACTOR  * this.jumpFactor;
                 const distance = Phaser.Math.Distance.Between(this.x, this.y, x, y);
                 const duration = (distance / Math.max(speed, 0.0001)) * 1000;
 
@@ -272,7 +273,7 @@ class Cat extends Phaser.GameObjects.Container {
                     ? Phaser.Math.Clamp(z, 1, 10)
                     : this.z;
 
-                const speed    = CATSPEED * this.jumpFactor;
+                const speed    = CATSPEED * LEVEL_SCALE_FACTOR  * this.jumpFactor;
                 const distance = Phaser.Math.Distance.Between(this.x, this.y, x, y);
                 const duration = (distance / Math.max(speed, 0.0001)) * 1000;
 
@@ -312,6 +313,8 @@ class Cat extends Phaser.GameObjects.Container {
      *   если его не было — просто idle().
      */
     scareFor(time) {
+        if (this.state === 'fight') return;
+
         const duration = (time || 1000) * this.scareFactor;
 
         // уже под страхом – просто обновим таймер
@@ -439,18 +442,18 @@ class Cat extends Phaser.GameObjects.Container {
         }
 
         // scale по сырому z (float) — плавно
-        const scale = 0.5 + rawZ * 0.08;
-        this.setScale(scale);
+        const scale = 0.3 + rawZ * 0.08;
+        this.setScale(scale * LEVEL_SCALE_FACTOR);
     }
 
     // радиус кругового коллайдера: ~0.5 ширины спрайта (диаметр)
     getCollisionRadius() {
         if (!this.sprite) return 0;
 
-        const baseWidth = (this.sprite.width || 0) * Math.abs(this.sprite.scaleX || 1);
-        const worldScale = Math.abs(this.scaleX || 1); // масштаб контейнера по z
+        const baseWidth = Math.min(this.sprite.width, this.sprite.height) * this.sprite.scale;
+        const worldScale = Math.abs(this.scale); // масштаб контейнера по z
 
-        return baseWidth * worldScale * 0.25; // 0.5 от ширины → радиус = 0.25
+        return baseWidth * worldScale * 0.5; // 0.5 от ширины → радиус = 0.25
     }
 
     // мировой центр коллайдера = центр текстуры (0.5, 0.5), независимо от origin
@@ -700,7 +703,7 @@ class Cat extends Phaser.GameObjects.Container {
                 }
 
                 this._setTextureSafe(fightKey);
-                this.sprite.setScale(1.1);
+                this.sprite.setScale(1);
                 this.sprite.setPosition(0, 0);
 
                 // хаотичная драка — быстрые вращения и сквош/стретч
@@ -818,4 +821,3 @@ class CatSequence {
         }
     }
 }
-

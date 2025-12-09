@@ -30,8 +30,9 @@ class PreloadScene extends Phaser.Scene {
 
     loadImages(path) {
         const images = [
-            "banaba.png",
+            "banana.png",
             "box1.png", "box2.png", "box3.png", "box4.png",
+            "box1_forward.png", "box2_forward.png", "box3_forward.png", "box4_forward.png",
             "busket1.png", "busket2.png",
             "car1.png", "car2.png", "car3.png",
             "cat_choice.png",
@@ -100,7 +101,7 @@ class PreloadScene extends Phaser.Scene {
     createLoaderCat() {
         // как только загрузился cat_run1_black — создаём спрайт и запускаем мигание
         this.load.once('filecomplete-image-cat_run1_black', () => {
-            this.loaderCat = this.add.sprite(this.centerX + 25, this.centerY, 'cat_run1_black')
+            this.loaderCat = this.add.sprite(this.centerX, this.centerY, 'cat_run1_black')
                 .setOrigin(0.5).setScale(1.3);
 
             // таймер переключения между кадрами раз в 0.25 c
